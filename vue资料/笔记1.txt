@@ -1,0 +1,119 @@
+vue:
+	干嘛的：一个框架(mvvm)
+	框架和库区别：
+		框架：改变思想
+		库：提供便利,不会改变思想
+	官网：https://cn.vuejs.org/
+		vue    		angualr     	react
+上手	*			***				**
+维护：	个人		谷歌			脸书
+场景：	pc/touch 	后台管理页面    pc/touch
+git:	61003		26120   		71678
+指令:	有			有				木有
+
+共同点：
+	不兼容
+	 IE8+
+
+命名空间:
+	css: 	.qf-red{}	.google-red{}
+	js:		var WEB.utils={web:'xx',}
+	vue:	v-xx 
+	angular: ng-xx 
+------------------------------------------------------------
+MVC:
+	MVVM/MVP /MV*
+
+	是个思想,是后端的产物
+
+	1. 后台
+		后台管理页面
+		java: jsp+html+css+js
+			<$ xx $>
+		php:	php+html+js
+			<{}>
+		nodjs:
+			{{}}	
+	2. 前端
+		html+css+js
+	3. 设计
+	4. 编辑
+
+	MVC: 核心分离 (前、后)
+	数据(后)，表现（前）
+
+js 的MVC
+	M: model 数据层
+		js: ajax jsonp fetch def...    操作数据部分的代码 封装到函数   model/xx.js 
+		getBAidu(请求字段,callback(data))
+	V: 视图 表现层
+		展示数据: document.createElement... dom , 变色,运动    view/xx.js
+		addLi(data)
+	C: 控制		业务层
+		M和V不会直接见面的,需要C给串起来
+		window.onload=function(){
+			let str=请求字段
+			getBaidu(str,function(data){
+				addLi(data)
+			})
+		}
+---------------------------------------------------------------
+学习思维：
+	面向过程:
+		事件驱动
+	面向对象:
+		面：对象
+			面.活着()
+			人.height=1mm
+	面向数据：数据驱动
+		汤、面：xx，盐：xx
+		衣服：xx...........
+做数据，不操作DOM，DOM操作交给vue
+好处：虚拟DOM==对象
+	{
+		li:['li1','li2','li3'],
+		div:...
+			ul:	..
+			od:
+	}
+--------------------------------------------------
+MVVM
+	M: 放数据
+		data:{数据名/变量名/属性:值(任何数据类型)}
+	V: 展示数据
+		{{数据名}}
+		v-text="数据名"
+		v-html="数据名"
+		v-for="val in arr"
+	VM: 中介   M <-> vm(viewModel) <->  V
+		var vm = new Vue({
+			data:{}
+		})
+--------------------------------------------------
+
+上手: new Vue({配置})  控制一片HTML代码
+
+--------------------------------------------------
+指令：
+	v-text="数据名"
+	v-html="数据名"  转义html
+	v-bind:HTML属性="数据"	src title 需要放入数据
+		简写：:html属性="数据"
+	v-for="val in arr"
+		val 是 arr数据里面的每一项
+--------------------------------------------------
+事件:
+	定义:
+		在vm 实例里面的一个选项(methods)
+		methods:{
+			方法名:函数(ev)
+				ev == $event	== 原生事件对象
+		}
+	调用:
+		v-on:原生事件名不带on="方法名($event,参数列表)"
+			@事件名="方法名"
+			$event -> 方法名函数
+--------------------------------------------------
+
+
+

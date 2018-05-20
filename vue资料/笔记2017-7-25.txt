@@ -1,0 +1,142 @@
+v-model:
+	用在可以生产数据的表单元素   V   ->   M
+	checkbox:	 true /false  修改的是value值
+	select：	 options.value  
+	radio:		 value指定值 ,默认true/false
+	button:		 value
+
+	v-model 会接管表单元素里面的值（value)
+	修改value时候，影响到M的数据->V (VALUE)
+-------------------------------------------------------
+
+指令:
+	v-model / v-text / v-html / v-on:事件 / v-bind:属性 / v-for / v-show /
+
+自定义指令：  指令就是一个函数,也可以是个对象,就是用来操作dom的
+	定义1：	定义到全局
+	Vue.directive('指令名',function(el,binding){
+		el == 使用指令的元素本身
+		binding == 负责接值   binding.value
+	});
+
+	定义2： 定义在根实例的选项里
+	{
+		选项
+		...
+		directives:{
+			指令名1:funtion(el,binding){}
+			指令名2:funtion(el,binding){}
+		}
+		...
+	}
+
+	调用:
+		<div v-指令名="值（要有数据类型)">...
+
+	钩子：函数执行的时机
+		bind: 只调用一次，指令绑定到元素时
+		inserted：插入到父节点时
+		update: 指令对应数据发生变化
+		componentUpdated: 变化完了
+
+		Vue.directive('指令名',{
+			bind:fn(el,binding){},
+			inserted:fn(el,binding){},
+			update:fn(el,binding){},
+			componentUpdated:fn(el,binding){},
+		});
+		函数:	 bind 和update  默认
+
+	默认：	指令里面的this都是window
+-------------------------------------------------------------------------------------
+事件：
+	v-on:事件=函数
+	v-on:事件=函数(参数)
+		@事件=函数(参数)
+冒泡：默认就会冒泡
+	取消冒泡:
+		1.
+		show($event)		$event->ev
+		ev.cancelBubble=true;	
+		ev.stopPropagation()
+		2.
+		@click.stop="show" 
+默认行为：
+	@click="show($event)" -> ev.preventDefault();阻止默认行为
+	@contextmenu.prevent="show"
+
+	连写：@ontextmenu.prevent.stop.xx.xx="show"
+键盘：
+	@keydown/keyup/keypress="show($event)" -> ev.keyCode + 判断
+	@keydown.键值="show"
+	@keydown.键名="show"
+		.left
+		.right
+		.enter
+		.up
+		.down
+--------------------------------------------------------------------
+购物车:
+--------------------------------------------------------------------
+过滤器：就是一个函数
+	vue1.0 自带过滤器 
+	vue2.0 自定义了
+	定义
+		1)
+			Vue.filter('过滤器名',function(){})
+		2)
+			{
+				选项
+				filters:{
+					过滤器名:function(){}
+				}
+			}
+	使用:
+		{{数据 | 过滤器名(arg1,arg2)}}
+--------------------------------------------------------------------
+数据交互:
+	vue 的数据 放在哪?
+	vue -> 库 -> data -> 状态管理
+
+需要第3方的插件:
+	vue-resource vue1.0 推荐
+		this.$http({
+		  url： (string)
+		  body: (any)
+		  headers (Headers)
+		  method (string)		get/post/put/....
+		  params (object)		数据参数: get
+		  timeout (number)		超时
+		  credentials (boolean)	凭证打开，cookie就可以携带数据到后台
+		  emulateHTTP (boolean)  指定jsonp请求，回调函数key
+		  emulateJSON (boolean)  请求头 要带
+		  before (function(Request)) 要强求之前
+		  progress (function(Event)) 进度
+		  jsonp:  (string)  指定jsonp回调函数键  默认callback
+		  getUrl() (string)
+		  getBody() (any)
+		  respondWith(any: body, object: options) (Response)
+		  abort()	终端
+		}).then(successfn(res),errorFn(res))
+			res.status 状态码
+			res.data 数据
+			res.ok 数据是否正确
+			res.headers 响应头
+
+		this.$http.get(url?数据,{配置}).then(succssFn,errorFn)
+		this.$http.post(url,{数据},{配置}).then(succssFn,errorFn)
+		this.$http.jsonp(url,{数据},{配置}).then(succssFn,errorFn)
+------------------------------------------------------------------------
+	axios		 vue2.0 推荐
+		用法 同上
+		axios.get(url?数据,{配置}).then(succssFn).catch(errorFn)
+		axios.post(url,{数据},{配置}).then(succssFn).catch(errorFn)
+
+		截止2017-7-25: axios没有jsonp
+------------------------------------------------------------------------
+数据监听:  数据发生变化，函数就会调用
+	选项
+	watch:{
+		数据名:函数
+	}
+------------------------------------------------------------------------

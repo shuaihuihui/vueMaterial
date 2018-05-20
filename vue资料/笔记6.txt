@@ -1,0 +1,63 @@
+路由
+	
+	干嘛的：做SPA  single page application  单页面应用
+	特点： 速度快, 数据ajax请求,通过路由整个页面不会重载
+	需要： 引入插件  vue-router.js
+
+路由告诉你应该去哪
+
+使用流程:
+	1. 使用路由
+		<router-link to="/home">首页</router-link>	跳转
+		<router-link :to="{name:'home'}">首页</router-link>	跳转
+		<router-view>展示区</router-view>
+	2. 创建路由(实例)	const router = new VueRouter({routes:配置});
+		配置: [
+			{一个路由项}	{path:'路径',component:组件}
+			redirect:'path'	重定向
+			children: [子路由配置]
+			name:	路由名  路由命名
+		]
+	3. 注册（挂载到根组件实例）路由实例
+		new Vue({
+			el:xxx
+			router: 路由实例
+		})
+
+		传参
+			router-link	to='/xx/参数?a=1&数据'
+		接参
+		{{$route.params.uid}}|{{$route.query}}|{{$route.path}}
+	路由跳转:
+		router.push({path:xx})  添加一个路由
+		router.replace(..)   替换
+		router.go(-1/1)  前进后退
+
+	router 路由实例   routes 配置  $route 单个路由
+
+	激活路由样式:	<router-link active-class='类名'
+	路由标签指定：	tag="li"
+
+	多视图:
+		<router-view name="视图名">
+			视图名: 默认视图(default)
+					自定义视图名 
+		路由配置：组件和视图名 配对儿
+
+VUE数据存到哪?
+	库 -> 状态-> data -> view(渲染)
+
+
+
+单文件组件
+webpack
+
+模块方式搭建vue项目环境（手动)
+
+脚手架
+
+状态管理
+
+项目
+
+一周

@@ -1,0 +1,20 @@
+git init     初始化一个Git仓库
+git status    查看一下状态
+git add <file>   注意，可反复多次使用，添加多个文件
+git commit      把文件提交到仓库
+git log  显示从最近到最远的提交日志
+git reset  版本回退  上一个版本就是HEAD^ 上上一个版本就是HEAD^^  git reset --hard 3628164 退回指定的版本
+git checkout 切换分支 -b file.name创建并切换 
+git checkout -- file 丢弃工作区的修改： 场景1：当你改乱了工作区某个文件的内容，想直接丢弃工作区的修改时，用命令git checkout -- file。
+
+					场景2：当你不但改乱了工作区某个文件的内容，还添加到了暂存区时，想丢弃修改，分两步，第一步用命令git reset HEAD file，就回到了场景1，第二步按场景1操作。
+git branch dev 创建branch分支
+git checkout dev 切换到dev分支
+git checkout -b dev 创建并切换到dev分支
+git merge dev 把dev分支合并到master分支上     命令用于合并指定分支到当前分
+git branch -d dev 删除dev分支
+git remote   git remote -v 查看远程库的信息
+git push origin master  推送分支，就是把该分支上的所有本地提交推送到远程库。推送时，要指定本地分支，这样，Git就会把该分支推送到远程库对应的远程分支上：
+git checkout -b dev origin/dev  创建远程origin的dev分支到本地
+git pull  把最新的提交从origin/dev抓下来 前提是自己本地有dev分支
+git branch --set-upstream dev origin/dev  指定本地dev分支与远程origin/dev分支的链接 就能git pull了

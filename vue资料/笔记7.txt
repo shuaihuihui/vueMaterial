@@ -1,0 +1,120 @@
+路由
+	
+	干嘛的：做SPA  single page application  单页面应用
+	特点： 速度快, 数据ajax请求,通过路由整个页面不会重载
+	需要： 引入插件  vue-router.js
+
+路由告诉你应该去哪
+
+使用流程:
+	1. 使用路由
+		<router-link to="/home">首页</router-link>	跳转
+		<router-link :to="{name:'home'}">首页</router-link>	跳转
+		<router-view>展示区</router-view>
+	2. 创建路由(实例)	const router = new VueRouter({routes:配置});
+		配置: [
+			{一个路由项}	{path:'路径',component:组件}
+			redirect:'path'	重定向
+			children: [子路由配置]
+			name:	路由名  路由命名
+		]
+	3. 注册（挂载到根组件实例）路由实例
+		new Vue({
+			el:xxx
+			router: 路由实例
+		})
+
+		传参
+			router-link	to='/xx/参数?a=1&数据'
+		接参
+		{{$route.params.uid}}|{{$route.query}}|{{$route.path}}
+	路由跳转:
+		router.push({path:xx})  添加一个路由
+		router.replace(..)   替换
+		router.go(-1/1)  前进后退
+
+	router 路由实例   routes 配置  $route 单个路由
+
+	激活路由样式:	<router-link active-class='类名'
+	路由标签指定：	tag="li"
+
+	多视图:
+		<router-view name="视图名">
+			视图名: 默认视图(default)
+					自定义视图名 
+		路由配置：组件和视图名 配对儿
+
+VUE数据存到哪?
+	库 -> 状态-> data -> view(渲染)
+-----------------------------------------------------------------------------
+
+webpack:
+	干嘛的：模块加载器,打包工具（自动解决依赖），项目管理
+		前身：browserify  缺点：只转化js
+	一切都模块	(js/css/html/图片)
+
+	安装：基于node环境   node + npm 
+		  node -v npm -v   √
+	官网：http://webpack.github.io/
+
+	安装流程：
+		npm install webpack -g  全局安装（使用webpack 命令,运行dos/git)
+		测试安装：webpack --version
+	生成：package.json		npm init -y
+
+	安装+加载模块:
+		npm install webpack -D   本地依赖
+
+	注意：打包非js以外的文件类型，需要loader	(转换器)
+		loader: 需要下载
+
+		  转换css 需要  css-loader
+		  插入到style标签里面：需要 style-loader
+
+		  转换es6->es5   babel-loader babel-core babel-preset-es2015 转换器
+
+	webpack.config.js   配置文件 、 自身也是一个模块、 nodejs文件
+		作用：配置入口、出口、loader......  
+		webpack --config abc.js   修改配置文件名
+
+	webpack -w 监听文件改动、自动编译、不会热重载（自动刷新html）
+	webpack -d 开启source maps 用来调试报错执向 开发环境
+		delTool:'source-map' 配置到webpack 不用每次 -d
+	webpack -p 打包之后、压缩
+
+
+	webpack-dev-server 前端web服务器（热重载)
+
+	安装:	npm install webpack-dev-server -g     注意观察支持的webpack 最高版本
+
+	运行方式1)
+		webpack-dev-server --port 8001 --open
+			--port 8001 端口号
+			--inline  热重载
+			--open 自动第一次打开浏览器
+			--progress 进度
+	运行方式2) :  webpack-dev-server
+			devServer:{			需要在webpack.config.js配置
+			    port: 8009,
+			    inline:true
+			  }
+	运行方式3): npm run dev  / npm start
+		package.json -> scripts
+			script: webpack-dev-server --port 8001 --open
+
+模块方式搭建vue项目环境（手动)
+------------------------------------------------------------------------------
+
+单文件组件: style/script/template
+
+
+脚手架:
+
+状态管理:
+
+项目:
+	
+
+一周:
+
+------------------------------------------------------------------------------

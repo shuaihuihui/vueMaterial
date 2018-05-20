@@ -1,0 +1,10 @@
+钩子：生命周期
+	
+	
+防闪烁：
+[v-cloak]{
+      display: none;
+}
+
+<div v-cloak>
+	内容{{}}
