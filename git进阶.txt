@@ -1,0 +1,463 @@
+https://blog.csdn.net/zy00000000001/article/details/70505150
+1、远程库相关的操作命令
+      1.1、git remote ：为了便于管理，Git要求每个远程主机都必须指定一个主机名。git remote命令就用于管理主机名。
+              git remote 命令即可，就会列出远程库的名字。在我们clone了刚才的项目之后，默认会看到一个origin的远程仓库。
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/TestTwo (test)
+$ git remote
+origin
+           显示出详细的url地址名和对应的别名.
+           git remote -v/--verbose
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/TestTwo (test)
+$ git remote -v
+origin  git@github.com:zhaoJoeyuan/TestTwo.git (fetch)
+origin  git@github.com:zhaoJoeyuan/TestTwo.git (push)
+         添加远程仓库，一旦添加以后别名就代表远程库的版本库地址，可以直接使用。
+         git remote add name url 
+         git remote add joey git@github.com:zhaoJoeyuan/Test.git
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/TestTwo (test)
+$ git remote add joey git@github.com:zhaoJoeyuan/Test.git
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/TestTwo (test)
+$ git remote -v
+joey    git@github.com:zhaoJoeyuan/Test.git (fetch)
+joey    git@github.com:zhaoJoeyuan/Test.git (push)
+origin  git@github.com:zhaoJoeyuan/TestTwo.git (fetch)
+origin  git@github.com:zhaoJoeyuan/TestTwo.git (push)
+          删除添加的远程库
+          git remote remove name 
+          git remote remove joey
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/TestTwo (test)
+$ git remote remove joey
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/TestTwo (test)
+$ git remote -v
+origin  git@github.com:zhaoJoeyuan/TestTwo.git (fetch)
+origin  git@github.com:zhaoJoeyuan/TestTwo.git (push)
+       重命名远程库
+       git remote rename 原名字 新名字
+       git remote rename origin joey
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/TestTwo (test)
+$ git remote rename origin joey
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/TestTwo (test)
+$ git remote -v
+joey    git@github.com:zhaoJoeyuan/TestTwo.git (fetch)
+joey    git@github.com:zhaoJoeyuan/TestTwo.git (push)
+        查看指定主机的详细信息：
+        git remote show 主机名
+        git remote show joey
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/TestTwo (test)
+$ git remote show joey
+* remote joey
+  Fetch URL: git@github.com:zhaoJoeyuan/TestTwo.git
+  Push  URL: git@github.com:zhaoJoeyuan/TestTwo.git
+  HEAD branch: master
+  Remote branches:
+    TestTTT             new (next fetch will store in remotes/joey)
+    master              tracked
+    zhaoJoeyuan-patch-1 tracked
+  Local branch configured for 'git pull':
+    master merges with remote master
+  Local ref configured for 'git push':
+    master pushes to master (fast-forwardable)
+    总的来说就是git  remote +各种不同的参数来做不同的操作。
+    1.2、git push：从本地向指定的远程库推送。
+            git分支推送/拉取顺序的写法是<来源地>:<目的地>所以push和pull肯定是相反的,push来源地是本机，pull的来源地是
+     远程。
+            git push <远程主机名>   <本地分支名>:<远程分支名>。
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/remote_test (master)
+$ git remote -v
+joey    git@github.com:zhaoJoeyuan/RemoteForTest.git (fetch)
+joey    git@github.com:zhaoJoeyuan/RemoteForTest.git (push)
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/remote_test (master)
+$ git push joey master:master
+Counting objects: 3, done.
+Writing objects: 100% (3/3), 301 bytes | 0 bytes/s, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To git@github.com:zhaoJoeyuan/RemoteForTest.git
+ * [new branch]      master -> master
+          将本地的master分支推送到了远程库的master分支，如果远程分之不存在将会被创建。
+          如果省略本地分支名，则表示删除指定的远程分支，因为这等同于推送一个空的本地分支到远程分支。注意第一个分
+          支是不可以被删除的，我第一个创建的分支是joey/master
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/remote_test (master)
+$ git push joey :joey/master
+To git@github.com:zhaoJoeyuan/RemoteForTest.git
+ ! [remote rejected] joey/master (refusing to delete the current branch: refs/heads/joey/master)
+error: failed to push some refs to 'git@github.com:zhaoJoeyuan/RemoteForTest.git'
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/remote_test (master)
+$ git push joey :master
+To git@github.com:zhaoJoeyuan/RemoteForTest.git
+ - [deleted]         master
+        等同于git push joey--delete maste (没试)
+        如果省略远程分支名，则表示将本地分支推送到与之存在Tracking的远程分支。 （后面的：和远程分支名字省略）
+        比如常见的
+        git push origin master  
+        将本地的 master 分支推送到 origin 主机的属于本地master分支的upstream的分支，不存在的时候会自动创建。
+        没想到都可以推送成功，只要本地分支没出错.
+        以上是当前分支与远程分支没存在追踪关系，就是谁也不是谁upstream/downstream。此时接着调用
+        git push joey ： 省略本地分支和远程分支的时候就会报错，提示。
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/remote_test (master)
+$ git push joey
+fatal: The current branch master has no upstream branch.
+To push the current branch and set the remote as upstream, use
+    git push --set-upstream joey master
+         提示当前分支没有upstream 分支，我们先了解一下什么是upstream分支
+         如果某一个库如joey库中的分支test被push到另一个库比如远程服务库server库中的分支main，那么main就是test的
+         upstream，而test就是main的downstream。其实就是网谁那push，想象成在你的上面。此时：
+              1)、对于从远程库中clone或fetch得到的本地分支，都在远程库中有一个upstream分支。
+              2)、对于在本地新建的本地分支，如果执行git push origin branch_name是不会为本地分支branch_name设定远程的
+              upstream的。
+              此时就需要我们自己设定了，有命令：git branch --set-upstream-to=xxx (upstream分支的名称)不过那暂时还没搞
+       清楚。一定要注意后面的名字要正确，是远程的时候需要主机名/远程分支名字.
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/remote_test (master)
+$ git branch --set-upstream-to=joey/test
+Branch master set up to track remote branch test from joey.
+       但是在push的时候通过-u参数来设置更为方便，一旦设置成功以后就可以直接用git push命令来推送了，此时会遵循一
+个推送规则。(如果当前分支与多个主机存在追踪关系，则可以使用-u选项指定一个默认主机)
+        至于那个推送规则由 git config中的push.default属性决定。在Git 2.0之前，这个属性的默认被设为'matching'，2.0之后
+则被更改为了'simple'。
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/remote_test (master)
+$ git push -u joey master
+Counting objects: 3, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 307 bytes | 0 bytes/s, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To git@github.com:zhaoJoeyuan/RemoteForTest.git
+   5a53d5f..8b609e8  master -> master
+Branch master set up to track remote branch master from joey.
+          从英文也能看出把远程的master设置成了当前master的upstream。
+         push.default 有几个可选值：nothing, current, upstream, simple, matching
+         其用途分别为：
+              nothing ：push操作无效，除非显式指定远程分支。
+              current ：push当前分支到远程同名分支，如果远程同名分支不存在则自动创建同名分支。
+              upstream ： push当前分支到它的upstream分支上。
+              simple ：simple和upstream是相似的，只有一点不同，simple必须保证本地分支和它的远程upstream分支同名，否
+                             则会拒绝push操作。(注意必须同名)
+             matching ： push所有本地和远程两端都存在的同名分支。
+             因此如果我们使用了git2.0之前的版本，push.default = matching，git push后则会推送当前分支代码到远程分支，而
+        2.0之后，push.default = simple，如果没有指定当前分支的upstream分支，就会收到上文的fatal提示。
+ fatal: The current branch master has no upstream branch.
+To push the current branch and set the remote as upstream, use
+    git push --set-upstream joey master
+            接下来你就可以直接用git push了，不加任何参数它会直接把本地当前所在的分支推送到远端对应的upstream
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/remote_test (master)
+$ git push
+Counting objects: 3, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 313 bytes | 0 bytes/s, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To git@github.com:zhaoJoeyuan/RemoteForTest.git
+   8b609e8..07d9e62  master -> maste
+          这样就推送成功了。
+          git push --all 主机名 （奶奶的自己玩的时候还真有点用，不然就得自己一个个分支切换然后提交）
+          $ git push --all joey ：将所有本地分支都推送到joey主机,本地种所有的分支以及上面的修改都推送上去了，此时假如
+                                             服务器上的版本更新了，可能就push不成功需要我们先更新代码。
+          $ git push origin --tags：git push不会推送标签（tag），除非使用--tags选项。
+        后面这两个都没有尝试。
+
+    1.3、git fetch ：此命令会到远程仓库中拉取对应你本地仓库中还没有的数据。
+             git fetch <远程主机名>  将某个远程主机的更新，全部取回本地.但注意它只是把远程分支在你本地对应的分支上的
+    数据更新了，你本地的库里面还是没有任何数据的。比如：我已在远程库修改了Test.txt
+           注意：所取得的远程分支在本地主机上要用"远程主机名/分支名"的形式读取。比如origin主机的master，就要用
+                      origin/master读取。
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (joey/master)
+$ git fetch origin
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (joey/master)
+$ git status
+On branch joey/master
+Your branch is behind 'origin/joey/master' by 1 commit, and can be fast-forwarded.
+  (use "git pull" to update your local branch)
+nothing to commit, working directory clean
+           本地看不到任何的变化，但其实本地库对应的远程库的代码都已经更新了
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (joey/master)
+$ git branch -a
+* joey/master
+  remotes/origin/HEAD -> origin/joey/master
+  remotes/origin/joey/master
+  remotes/origin/master
+  remotes/origin/next
+  remotes/origin/re
+  remotes/origin/server
+  remotes/origin/test
+         就是如上待remote的已经更新成服务器上最新的代码了。此时再接着执行merge的操作把，远程库的代码merge到你
+    本地库版本当中就会有数据了
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (joey/master)
+$ git merge origin/joey/master
+Updating 255a3b2..1d07ddc
+Fast-forward
+ Test.txt | 1 +
+ 1 file changed, 1 insertion(+)
+          通过cat看(这是我本地实验的在远程库中更新了"远程更新"这几个字，一开始fetch完的时候cat Test.txt完全没变化的)
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (joey/master)
+$ cat Test.txt
+第一个文件！
+修改的enen
+远程更新
+           取回特定分支的更新，可以指定分支名。
+           git fetch <远程主机名> <分支名>。此时我再去操纵远程库，打算修改next分支和 master分支。然后只拉取master分
+      支然后把next的分支和master的分支全都合入看看变化是否符合预期。（前面显示了我这边远程的所有分支）助于怎么
+     修改我还是在原先内容加了远程更新。
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (joey/master)
+$ git fetch origin master
+remote: Counting objects: 3, done.
+remote: Compressing objects: 100% (1/1), done.
+remote: Total 3 (delta 1), reused 3 (delta 1), pack-reused 0
+Unpacking objects: 100% (3/3), done.
+From github.com:zhaoJoeyuan/RemoteForTest
+ * branch            master     -> FETCH_HEAD
+   07d9e62..a040ffb  master     -> origin/master
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (master)
+$ cat Test.txt
+第一个文件！
+修改的enen
+第三次修改
+第五次修改
+第六次修改
+远程更新
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (next)
+$ cat Test.txt
+第一个文件！
+修改的enen
+第三次修改
+第五次修改
+         可以看到只有master分支的改变了，符合预期。不一样的诗词史我们有merge也变了，可能是因为这个本地分支相当
+    于是新建的通过远程分支，所以才这样。要是本来就有应该就需要merge了。正好用next试验一下
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (next)
+$ git fetch origin next
+remote: Counting objects: 3, done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 0), reused 3 (delta 0), pack-reused 0
+Unpacking objects: 100% (3/3), done.
+From github.com:zhaoJoeyuan/RemoteForTest
+ * branch            next       -> FETCH_HEAD
+   8b609e8..5267571  next       -> origin/next
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (next)
+$ cat Test.txt
+第一个文件！
+修改的enen
+第三次修改
+第五次修改
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (next)
+$ git merge origin/next
+Updating 8b609e8..5267571
+Fast-forward
+ Test.txt | 1 +
+ 1 file changed, 1 insertion(+)
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (next)
+$ cat Test.txt
+第一个文件！
+修改的enen
+第三次修改
+第五次修改
+next远程更新
+           如上同样符合我们的预期。  注意前面之所以fetch这么顺利，我是直接clone的远程的分支，这样就不用设置再设置
+     跟踪分支了，还有一点是我修改的都是没有冲突的地方。入门先了解到这。
+    其实取得远程分支以后有两种处理方式：
+         1）、基于次分支创建一个新的分支。 然后你就在新分支上开发即可。
+              git checkout -b newBrach origin/master(远程分支名字)
+             这样执行玩这个就不用再merge 了，远程更新直接到本地了，也能理解毕竟这个新分支是基于你拉取下来的完整的
+            远程分支来创建的。
+          2)、git merge命令或者git rebase 命令，在本地分支上合并远程分支。
+               git merge origin/master     git rebase origin/master 
+
+       小结：拉取下来的远程分支的更新一定注意是很本地当前的分支不是直接联系的，就是说不是直接拉取到本地的相应
+                 的分支上的，这个概念的装换一下和svn update不一样。git pull才和 svn update以昂扬。
+                git 下的分支简单的两种：
+                        “本地分支(local branches)” ，当你输入“git branch”时显示的
+                       “远程跟踪分支(Remote-tracking branches)” ，当你输入“git branch -r”是显示的
+                        跟踪分支的名称前有一个“远程的”标记名称（如 :origin, ）后面跟一个“／”，然后远程仓库里分支的真正名称
+               分支索引的存放目录：
+                       .git/refs/head/[本地分支]
+                       .git/refs/remotes/[正在跟踪的分支]
+               也就是说fetch操作将会更新本地仓库的remote tracking，也就是refs/remotes中的代码，并不会对refs/heads中本
+              地当前的代码造成影响
+      另外两种用法：
+             1）、 git fetch <远程主机名>   <远程分支名>：<本地分支名>： 抓取对应主机名称的远程分支的相应分支的更新，
+                      并且新建一个本地分支来存放它。
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (newmaster)
+$ git fetch origin next:local
+From github.com:zhaoJoeyuan/RemoteForTest
+ * [new branch]      next       -> local
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (local)
+$ cat Test.txt
+第一个文件！
+修改的enen
+第三次修改
+第五次修改
+next远程更新
+                确实成功了，那么假如是已经存才的本地分支那?也可以，有冲突解决冲突即可.
+             2)、git fetch  将更新git remote 中所有的远程库所包含分支的最新commit-id, 并且将其记录到.git/FETCH_HEAD文件
+             中。
+           貌似所有的fetch都会修改.git/FETCH_HEAD文件，然后把最新的fetch修改的commitID放进去。如下：
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (local)
+$ git fetch origin next:re
+From github.com:zhaoJoeyuan/RemoteForTest
+ * [new branch]      next       -> re
+          此时FETCH_HEAD文件
+52675714d0117f6732ad744ecaaf2dce7389b5f branch 'next' of github.com:zhaoJoeyuan/RemoteForTest
+          再执行git fetch （看样子一般不要这么用啊，全部都拉取下来了）
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (local)
+$ git fetch
+remote: Counting objects: 12, done.
+remote: Compressing objects: 100% (8/8), done.
+remote: Total 12 (delta 3), reused 0 (delta 0), pack-reused 0
+Unpacking objects: 100% (12/12), done.
+From github.com:zhaoJoeyuan/RemoteForTest
+   1d07ddc..73fdfc0  joey/master -> origin/joey/master
+   aba261d..5104d8b  master     -> origin/master
+   5267571..80d333e  next       -> origin/next
+   57c77bc..04a30ff  server     -> origin/server
+           此时FETCH_HEAD
+73fdfc040d33b24d893a2b686385da5a0adc3425 not-for-merge branch 'joey/master' of github.com:zhaoJoeyuan/RemoteForTest
+5104d8b4e3cd4875284faad0a2c8365441032c71 not-for-merge branch 'master' of github.com:zhaoJoeyuan/RemoteForTest
+80d333e36ead0f32e6ec174cd70e0e8a69ab5667 not-for-merge branch 'next' of github.com:zhaoJoeyuan/RemoteForTest
+57c77bc1e20931001e8268bbb4e2fb870041aeac not-for-merge branch 're' of github.com:zhaoJoeyuan/RemoteForTest
+04a30ff3d362be74fcf39627cfbc115fb172bb7b not-for-merge branch 'server' of github.com:zhaoJoeyuan/RemoteForTest
+5a53d5f5c7cbc39685cea1a20be91d49112cfc54 not-for-merge branch 'test' of github.com:zhaoJoeyuan/RemoteForTest
+       可见FETCH_HEAD是一个寿命很短的引用，用来跟踪刚刚从远程库中fetch下来的分支的最新的commitid。其实就是
+来代替远程分支的名字的,其实是远程分支的最新的这一次的提交的commitid对应的指针。
+    此时就能理解git merge FETCH_HEAD 。当仅仅是fetch一个分支的时候 如下：
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (joey/master)
+$ git fetch origin joey/master
+remote: Counting objects: 3, done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+Unpacking objects: 100% (3/3), done.
+From github.com:zhaoJoeyuan/RemoteForTest
+ * branch            joey/master -> FETCH_HEAD
+   73fdfc0..64f26f9  joey/master -> origin/joey/master
+         从Log也能看出FETCH_HEAD 对应的分支。
+ Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (joey/master)
+$ cat Test.txt
+第一个文件！
+修改的enen
+远程更新
+TTTTTTTTTTTTTTTT
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (joey/master)
+$ git merge FETCH_HEAD
+Updating 73fdfc0..64f26f9
+Fast-forward
+ Test.txt | 1 +
+ 1 file changed, 1 insertion(+)
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (joey/master)
+$ cat Test.txt
+第一个文件！
+修改的enen
+远程更新
+TTTTTTTTTTTTTTTT
+           可以看到git merge FETCH_HEAD 就相当于 git merge original/joey/master
+
+     1.4、git pull  取回远程主机某个分支的更新，再与本地的指定分支合并
+            完整命令，注意此时的数据源就是远程分支了.
+           git pull <远程主机名> <远程分支名>:<本地分支名>
+           注意这个远程分支名是不带origin/的前缀的（别名的前缀）,有冲突的时候修改冲突即可，修改完毕add、commit。
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (master)
+$ cat Test.txt
+第一个文件！
+修改的enen
+第三次修改
+第五次修改
+第六次修改
+远程更新
+远程更新2
+TTTTTTTTTTTTTTTTTTTTTT
+PULL的修改
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (master)
+$ git pull origin master:master
+remote: Counting objects: 3, done.
+remote: Compressing objects: 100% (2/2), done.
+Unpacking objects: 100% (3/3), done.
+remote: Total 3 (delta 1), reused 0 (delta 0), pack-reused 0
+From github.com:zhaoJoeyuan/RemoteForTest
+   d2f5ef2..ee244d0  master     -> master
+   d2f5ef2..ee244d0  master     -> origin/master
+warning: fetch updated the current branch head.
+fast-forwarding your working tree from
+commit d2f5ef264938919adc6e43459551397eaf96ef11.
+Already up-to-date.
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (master)
+$ cat Test.txt
+第一个文件！
+修改的enen
+第三次修改
+第五次修改
+第六次修改
+远程更新
+远程更新2
+TTTTTTTTTTTTTTTTTTTTTT
+PULL的修改
+PULL的修改2
+         此时实际操作的时候发现一个问题，它还会尝试往当前所在的分支合并。不知道为啥？
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (next)
+$ git pull origin master:master
+remote: Counting objects: 3, done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 1), reused 0 (delta 0), pack-reused 0
+Unpacking objects: 100% (3/3), done.
+From github.com:zhaoJoeyuan/RemoteForTest
+   ee244d0..e4b44b4  master     -> master
+   ee244d0..e4b44b4  master     -> origin/master
+Auto-merging Test.txt
+CONFLICT (content): Merge conflict in Test.txt
+Automatic merge failed; fix conflicts and then commit the result.
+          然后当前分支就处于merge状态并要求合并分支不知道为啥？？？？？？此处直接abort了。
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (next|MERGING)
+$ git merge --abort
+         然后切换到master分支查看有没有成功。
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (master)
+$ cat Test.txt
+第一个文件！
+修改的enen
+第三次修改
+第五次修改
+第六次修改
+远程更新
+远程更新2
+TTTTTTTTTTTTTTTTTTTTTT
+PULL的修改
+PULL的修改2
+PULL的修改3
+        如果远程分支是与当前分支合并，则冒号后面的部分可以省略。后面是本地分支吗。
+        git pull origin next 。表示取回 origin/next 分支，再与当前分支合并。等同于先做git fetch，再做git merge。 
+       也就是 git fetch origin    it merge origin/next  注意此处是origin/next。
+       到此为止我这边pull的都很顺利，同样是由于我是用git clone的，自动生成了跟踪分支，如果没有跟踪分支需要你提前
+手动的设定跟踪分支。如果当前分支与远程分支存在追踪关系。
+       git pull origin 就可以省略远程分支名。相当于把当前分之自动与它的upstream合并。
+      只有一个追踪分支的时候可省略主机名字   git pull  。
+      当我们进行pull的第二个行为merge时，对git来说如果我们没有指定upstream，git在merge时会访问git config中当前分支
+如(master)merge的默认配置，我们可以通过配置下面的内容指定某个分支的默认merge操作
+Administrator@9GPBSPCCTFQXEUX MINGW64 /e/gits/RemoteForTest (master)
+$ cat .git/config
+[core]
+        repositoryformatversion = 0
+        filemode = false
+        bare = false
+        logallrefupdates = true
+        symlinks = false
+        ignorecase = true
+        hideDotFiles = dotGitOnly
+[remote "origin"]
+        url = git@github.com:zhaoJoeyuan/RemoteForTest.git
+        fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "joey/master"]
+        remote = origin
+        merge = refs/heads/joey/master
+[branch "master"]
+        remote = origin
+        merge = refs/heads/master
+[branch "next"]
+        remote = origin
+        merge = refs/heads/next
+[branch "newmaster"]
+        remote = origin
+        merge = refs/heads/master
+[branch "master"]
+        remote = origin  //远程的版本库地址
+        merge = refs/heads/master    //一定要注意是refs/heads/master而不是refs/remotes/master
+    命令行的设置：git config branch.master.merge refs/heads/master。
+     这样当我们在master分支git pull时，如果没有指定upstream分支，git将根据我们的config文件去merge origin/develop；如
+果指定了upstream分支，则会忽略config中的merge默认配置。
+为什么merge = refs/heads/develop 而不是refs/remotes/develop? (我还是不太理解)
+因为这里merge指代的是我们想要merge的远程分支，是remote上的refs/heads/develop，文中即是origin上的refs/heads/dev
+elop，这和我们在本地直接执行git merge是不同(本地执行git merge origin/develop则直接merge refs/remotes/develop)。
+注意有时候会有很多冲突的需要你手动解决
+     看网上说一般不要用git pull。
